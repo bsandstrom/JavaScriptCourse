@@ -92,6 +92,7 @@
     dev.social.twitter = 'some new value'; //Changes wes too!!!
     console.log(wes, dev);
 
+    //Known as the poor mans deep clone
     const dev2 = JSON.parse(JSON.stringify(wes));
     console.clear();
     console.log(wes.social.twitter, dev2.social.twitter);
