@@ -28,8 +28,53 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items'));
 
+  function addItem(e) {
+    e.preventDefault();
+    const text = (this.querySelector('[name=item]')).value;
+    const item = {
+      text: text,
+      done: false
+    }
+    items.push(item);
+    populateList(items, itemsList);
+    saveState();
+    setCheckListeners();
+    this.reset();
+  }
+
+  function populateList(plates = [], platesList) {
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+        <li>
+          <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''} />
+          <label for="">${plate.text}</label>
+        </li>
+      `;
+    }).join('');
+  }
+
+  function toggleCheck() {
+    const checkbox = this.querySelector("input");
+    checkbox.checked = !checkbox.checked;
+    items[checkbox.dataset.index].done = checkbox.checked;
+    saveState();
+  }
+
+  function saveState() {
+    localStorage.setItem('items', JSON.stringify(items));
+  }
+
+  function setCheckListeners() {
+    Array.from(itemsList.getElementsByTagName("li")).forEach(item => {
+      item.addEventListener('click', toggleCheck);
+    });
+  };
+
+  populateList(items, itemsList);
+  addItems.addEventListener('submit', addItem);
+  setCheckListeners();
 </script>
 
 
